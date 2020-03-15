@@ -10238,10 +10238,10 @@ int Patch_CheatsHook(u8 *data, u32 length, u32 type) {
 	{
 		// Find OSSleepThread
 		if(*(vu32*)(data+i+0) == 0x3C808000 &&
-			(*(vu32*)(data+i+4) == 0x38000004 || *(vu32*)(data+i+4) == 0x808400E4) &&
-			(*(vu32*)(data+i+8) == 0x38000004 || *(vu32*)(data+i+8) == 0x808400E4)) 
+		   (*(vu32*)(data+i+4) == 0x38000004 || *(vu32*)(data+i+4) == 0x808400E4) &&
+		   (*(vu32*)(data+i+8) == 0x38000004 || *(vu32*)(data+i+8) == 0x808400E4))
 		{
-			
+
 			// Find the end of the function and replace the blr with a relative branch to CHEATS_ENGINE_START
 			int j = 12;
 			while( *(vu32*)(data+i+j) != 0x4E800020 )
@@ -10260,23 +10260,23 @@ int Patch_CheatsHook(u8 *data, u32 length, u32 type) {
 	for( i=0; i < length; i+=4 )
 	{
 		if(( *(vu32*)(data+i+0) == 0x3CC0CC01 &&
-			*(vu32*)(data+i+4) == 0x3CA04500 &&
-			*(vu32*)(data+i+12) == 0x38050002 &&
-			*(vu32*)(data+i+16) == 0x90068000 ) ||
-			( *(vu32*)(data+i+0) == 0x3CA0CC01 &&
-			*(vu32*)(data+i+4) == 0x3C804500 &&
-			*(vu32*)(data+i+12) == 0x38040002 &&
-			*(vu32*)(data+i+16) == 0x90058000 ) ||
-			( *(vu32*)(data+i+0) == 0x3FE04500 &&
-			*(vu32*)(data+i+4) == 0x3BFF0002 &&
-			*(vu32*)(data+i+20) == 0x3C60CC01  &&
-			*(vu32*)(data+i+24) == 0x93E38000  ) ||
-			( *(vu32*)(data+i+0) == 0x3C804500  &&
-			*(vu32*)(data+i+12) == 0x3CA0CC01  &&
-			*(vu32*)(data+i+28) == 0x38040002  &&
-			*(vu32*)(data+i+40) == 0x90058000  ) )
+			 *(vu32*)(data+i+4) == 0x3CA04500 &&
+			 *(vu32*)(data+i+12) == 0x38050002 &&
+			 *(vu32*)(data+i+16) == 0x90068000 ) ||
+		   ( *(vu32*)(data+i+0) == 0x3CA0CC01 &&
+			 *(vu32*)(data+i+4) == 0x3C804500 &&
+			 *(vu32*)(data+i+12) == 0x38040002 &&
+			 *(vu32*)(data+i+16) == 0x90058000 ) ||
+		   ( *(vu32*)(data+i+0) == 0x3FE04500 &&
+			 *(vu32*)(data+i+4) == 0x3BFF0002 &&
+			 *(vu32*)(data+i+20) == 0x3C60CC01  &&
+			 *(vu32*)(data+i+24) == 0x93E38000  ) ||
+		   ( *(vu32*)(data+i+0) == 0x3C804500  &&
+			 *(vu32*)(data+i+12) == 0x3CA0CC01  &&
+			 *(vu32*)(data+i+28) == 0x38040002  &&
+			 *(vu32*)(data+i+40) == 0x90058000  ) )
 		{
-			
+
 			// Find the end of the function and replace the blr with a relative branch to CHEATS_ENGINE_START
 			int j = 16;
 			while( *(vu32*)(data+i+j) != 0x4E800020 )
@@ -10295,3 +10295,65 @@ int Patch_CheatsHook(u8 *data, u32 length, u32 type) {
 }
 
 
+int Patch_SavestateHook(u8 *data, u32 length, u32 type) {
+	int i;
+
+	for( i=0; i < length; i+=4 )
+	{
+		// Find OSSleepThread
+		if(*(vu32*)(data+i+0) == 0x3C808000 &&
+		   (*(vu32*)(data+i+4) == 0x38000004 || *(vu32*)(data+i+4) == 0x808400E4) &&
+		   (*(vu32*)(data+i+8) == 0x38000004 || *(vu32*)(data+i+8) == 0x808400E4))
+		{
+
+			// Find the end of the function and replace the blr with a relative branch to CHEATS_ENGINE_START
+			int j = 12;
+			while( *(vu32*)(data+i+j) != 0x4E800020 )
+				j+=4;
+			// As the data we're looking at will not be in this exact memory location until it's placed there by our ARAM relocation stub,
+			// we'll need to work out where it will end up when it does get placed in memory to write the relative branch.
+			void *properAddress = Calc_ProperAddress(data, type, i+j);
+			if(properAddress) {
+				print_gecko("Found:[Hook:OSSleepThread] @ %08X\n", properAddress );
+				*(vu32*)(data+i+j) = branch(CHEATS_ENGINE_START, properAddress);
+				break;
+			}
+		}
+	}
+	// try GX DrawDone and its variants
+	for( i=0; i < length; i+=4 )
+	{
+		if(( *(vu32*)(data+i+0) == 0x3CC0CC01 &&
+			 *(vu32*)(data+i+4) == 0x3CA04500 &&
+			 *(vu32*)(data+i+12) == 0x38050002 &&
+			 *(vu32*)(data+i+16) == 0x90068000 ) ||
+		   ( *(vu32*)(data+i+0) == 0x3CA0CC01 &&
+			 *(vu32*)(data+i+4) == 0x3C804500 &&
+			 *(vu32*)(data+i+12) == 0x38040002 &&
+			 *(vu32*)(data+i+16) == 0x90058000 ) ||
+		   ( *(vu32*)(data+i+0) == 0x3FE04500 &&
+			 *(vu32*)(data+i+4) == 0x3BFF0002 &&
+			 *(vu32*)(data+i+20) == 0x3C60CC01  &&
+			 *(vu32*)(data+i+24) == 0x93E38000  ) ||
+		   ( *(vu32*)(data+i+0) == 0x3C804500  &&
+			 *(vu32*)(data+i+12) == 0x3CA0CC01  &&
+			 *(vu32*)(data+i+28) == 0x38040002  &&
+			 *(vu32*)(data+i+40) == 0x90058000  ) )
+		{
+
+			// Find the end of the function and replace the blr with a relative branch to CHEATS_ENGINE_START
+			int j = 16;
+			while( *(vu32*)(data+i+j) != 0x4E800020 )
+				j+=4;
+			// As the data we're looking at will not be in this exact memory location until it's placed there by our ARAM relocation stub,
+			// we'll need to work out where it will end up when it does get placed in memory to write the relative branch.
+			void *properAddress = Calc_ProperAddress(data, type, i+j);
+			if(properAddress) {
+				print_gecko("Found:[Hook:GXDrawDone] @ %08X\n", properAddress );
+				*(vu32*)(data+i+j) = branch(CHEATS_ENGINE_START, properAddress);
+				break;
+			}
+		}
+	}
+	return 0;
+}

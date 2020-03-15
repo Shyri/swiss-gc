@@ -36,6 +36,7 @@
 #include "mp3.h"
 #include "wkf.h"
 #include "cheats.h"
+#include "savestate.h"
 #include "settings.h"
 #include "aram/sidestep.h"
 #include "gui/FrameBufferMagic.h"
@@ -885,9 +886,9 @@ unsigned int load_app(ExecutableFile *filesToPatch, int numToPatch)
 			top_of_main_ram = DECODED_BUFFER_0;
 		}
 		// Steal even more if there's cheats!
-		if(swissSettings.wiirdDebug || getEnabledCheatsSize() > 0) {
+//		if(swissSettings.wiirdDebug || getEnabledCheatsSize() > 0) {
 			top_of_main_ram = WIIRD_ENGINE;
-		}
+//		}
 		// execD handler lives at the top of mem and is branched to via lowmem code.
 		if(*(vu32*)VAR_EXECD_OFFSET != 0 && *(vu32*)VAR_EXECD_OFFSET != -1) {
 			top_of_main_ram = EXECD_RUNNER;
@@ -1005,6 +1006,8 @@ unsigned int load_app(ExecutableFile *filesToPatch, int numToPatch)
 		Patch_CheatsHook(buffer, sizeToRead, type);
 	}
 
+	Patch_SavestateHook(buffer, sizeToRead, type);
+
 	DCFlushRange(buffer, sizeToRead);
 	ICInvalidateRange(buffer, sizeToRead);
 	
@@ -1083,7 +1086,9 @@ unsigned int load_app(ExecutableFile *filesToPatch, int numToPatch)
 	if(swissSettings.wiirdDebug || getEnabledCheatsSize() > 0) {
 		kenobi_install_engine();
 	}
-	
+
+	install_savestate();
+
 	print_gecko("libogc shutdown and boot game!\r\n");
 	if(devices[DEVICE_CUR] == &__device_sd_a || devices[DEVICE_CUR] == &__device_sd_b || devices[DEVICE_CUR] == &__device_sd_c) {
 		print_gecko("set size\r\n");

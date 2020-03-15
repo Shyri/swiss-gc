@@ -467,8 +467,10 @@ int patch_gcm(file_handle *file, ExecutableFile *filesToPatch, int numToPatch) {
 			if(swissSettings.wiirdDebug || getEnabledCheatsSize() > 0) {
 				Patch_CheatsHook(buffer, sizeToRead, filesToPatch[i].type);
 			}
-			
-			patched += Patch_FontEncode(buffer, sizeToRead);
+
+            Patch_SavestateHook(buffer, sizeToRead, filesToPatch[i].type);
+
+            patched += Patch_FontEncode(buffer, sizeToRead);
 			
 			if(!swissSettings.disableVideoPatches) {
 				Patch_GameSpecificVideo(buffer, sizeToRead, gameID, filesToPatch[i].type);

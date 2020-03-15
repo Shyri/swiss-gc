@@ -68,6 +68,7 @@ SOURCES		:=  source \
               source/devices/wode \
 			  source/devices/wiikeyfusion \
               source/cheats \
+              source/savestate \
               source/patches \
 			  source/patches/card \
 			  source/patches/misc \
