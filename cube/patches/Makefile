@@ -12,7 +12,7 @@ DEST    = ../swiss/source/patches
 DISASM    = disassembly
 
 .NOTPARALLEL:
-all: execdpatch dvdpatch hddpatch sdpatch usbpatch wkfpatch bbapatch
+all: savestate execdpatch dvdpatch hddpatch sdpatch usbpatch wkfpatch bbapatch
 
 execdpatch: clean build-execD
 dvdpatch: clean build-dvd
@@ -21,6 +21,7 @@ sdpatch: clean build-sd clean build-sd-alt
 usbpatch: clean build-usb
 wkfpatch: clean build-wkf
 bbapatch: clean build-bba
+savestate: clean build-savestate
 
 clean:
 	@rm -rf *.o
@@ -238,4 +239,15 @@ build-bba:
 	@mv -f bba.s $(DEST)/BBAPatch.s
 	@rm *.bin
 	@rm *.elf
-	
+
+build-savestate:
+	@echo Building Savestate ...
+	@$(CC) -O1 $(OPTS) -c savestate/savestate.S
+	@$(LD) -o savestate.elf -T savestate/savestate.ld -T base/common.ld savestate.o --gc-sections
+	@rm -rf *.o
+	@$(OBJDUMP) -D savestate.elf > $(DISASM)/savestate.txt
+	@$(OBJCOPY) -O binary savestate.elf savestate.bin
+	@$(BIN2S) savestate.bin > savestate.s
+	@mv -f savestate.s $(DEST)/savestate.s
+	@rm *.bin
+	@rm *.elf
