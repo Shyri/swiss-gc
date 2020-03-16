@@ -192,6 +192,10 @@ extern char VAR_AS_OUTR[0x38];
 #define WIIRD_ENGINE_SPACE  (0x2E00)
 #define WIIRD_ENGINE		(DECODED_BUFFER_0-WIIRD_ENGINE_SPACE)
 
+// Savestate Patch
+#define SAVESTATE_PATCH_SPACE (0x2E00)
+#define SAVESTATE_PATCH		  (DECODED_BUFFER_0-WIIRD_ENGINE_SPACE)
+
 // Audio Streaming buffers	(these live above ArenaHi...)
 #define BUFSIZE 			0xE00
 #define CHUNK_48 			0x400

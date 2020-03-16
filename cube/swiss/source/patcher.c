@@ -19,6 +19,7 @@
 #include "elf.h"
 #include "ata.h"
 #include "cheats.h"
+#include "savestate.h"
 
 static u32 top_addr = (u32)VAR_PATCHES_BASE;
 
@@ -10315,7 +10316,7 @@ int Patch_SavestateHook(u8 *data, u32 length, u32 type) {
             void *properAddress = Calc_ProperAddress(data, type, i+j);
             if(properAddress) {
                 print_gecko("Found:[Hook:OSSleepThread] @ %08X\n", properAddress );
-                *(vu32*)(data+i+j) = branch(CHEATS_ENGINE_START, properAddress);
+                *(vu32*)(data+i+j) = branch(SAVESTATE_PATCH_START, properAddress);
                 break;
             }
         }
