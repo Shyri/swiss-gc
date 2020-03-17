@@ -51,6 +51,7 @@ static char *tooltips_advanced[PAGE_ADVANCED_MAX+1] = {
 	"Hide Unknown file types:\n\nDisabled - Show all files (default)\nEnabled - Swiss will hide unknown file types from being displayed\n\nKnown file types are:\n GameCube Executables (.dol)\n Disc backups (.iso/.gcm)\n MP3 Music (.mp3)\n WASP/WKF Flash files (.fzn)\n GameCube Memory Card Files (.gci)\n GameCube Executables with parameters appended (.dol+cli)",
 	"Stop DVD Motor on startup\n\nDisabled - Leave it as-is (default)\nEnabled - Stop the DVD drive from spinning when Swiss starts\n\nThis option is mostly for users booting from game\nexploits where the disc will already be spinning.",
 	"WiiRD debugging:\n\nDisabled - Boot as normal (default)\nEnabled - This will start a game with the WiiRD debugger enabled & paused\n\nThe WiiRD debugger takes up more memory and can cause issues.",
+	"Savestate:\n\nEnable savestate.",
 	"File Management:\n\nDisabled - Known files will load immediately instead (default)\nEnabled - A file management prompt will be displayed for all files",
 	"Auto-load all cheats:\n\nIf enabled, and a cheats file for a particular game is found\ne.g. sd:/cheats/GPOP8D.txt (on a compatible device)\nthen all cheats in the file will be enabled",
 	NULL,
@@ -227,6 +228,7 @@ uiDrawObj_t* settings_draw_page(int page_num, int option, file_handle *file, Con
 		drawSettingEntryBoolean(page, &page_y_ofs, "Hide Unknown file types:", swissSettings.hideUnknownFileTypes, option == SET_HIDE_UNK, true);
 		drawSettingEntryBoolean(page, &page_y_ofs, "Stop DVD Motor on startup:", swissSettings.stopMotor, option == SET_STOP_MOTOR, true);
 		drawSettingEntryBoolean(page, &page_y_ofs, "WiiRD debugging:", swissSettings.wiirdDebug, option == SET_WIIRDDBG, true);
+		drawSettingEntryBoolean(page, &page_y_ofs, "Savestate:", swissSettings.enableSavestate, option == SET_SAVESTATE, true);
 		drawSettingEntryBoolean(page, &page_y_ofs, "File Management:", swissSettings.enableFileManagement, option == SET_FILE_MGMT, true);
 		drawSettingEntryBoolean(page, &page_y_ofs, "Auto-load all cheats:", swissSettings.autoCheats, option == SET_ALL_CHEATS, true);
 		drawSettingEntryBoolean(page, &page_y_ofs, "Disable Video Patches:", swissSettings.disableVideoPatches, option == SET_ENABLE_VIDPATCH, true);
@@ -425,6 +427,9 @@ void settings_toggle(int page, int option, int direction, file_handle *file, Con
 			break;
 			case SET_WIIRDDBG:
 				swissSettings.wiirdDebug ^=1;
+			break;
+			case SET_SAVESTATE:
+				swissSettings.enableSavestate ^=1;
 			break;
 			case SET_FILE_MGMT:
 				swissSettings.enableFileManagement ^=1;

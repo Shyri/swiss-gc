@@ -169,6 +169,8 @@ int config_update_file() {
 	string_append(configString, txtbuffer);
 	sprintf(txtbuffer, "Enable WiiRD debug=%s\r\n",(swissSettings.wiirdDebug ? "Yes":"No"));
 	string_append(configString, txtbuffer);
+	sprintf(txtbuffer, "Enable Savestate=%s\r\n",(swissSettings.enableSavestate ? "Yes":"No"));
+	string_append(configString, txtbuffer);
 	sprintf(txtbuffer, "Enable File Management=%s\r\n",(swissSettings.enableFileManagement ? "Yes":"No"));
 	string_append(configString, txtbuffer);
 	sprintf(txtbuffer, "Disable Video Patches=%s\r\n",(swissSettings.disableVideoPatches ? "Yes":"No"));
@@ -457,6 +459,9 @@ void config_parse(char *configData) {
 				}
 				else if(!strcmp("Enable WiiRD debug", name)) {
 					swissSettings.wiirdDebug = !strcmp("Yes", value) ? 1:0;
+				}
+				else if(!strcmp("Enable Savestate", name)) {
+					swissSettings.enableSavestate = !strcmp("Yes", value) ? 1:0;
 				}
 				else if(!strcmp("Enable File Management", name)) {
 					swissSettings.enableFileManagement = !strcmp("Yes", value) ? 1:0;

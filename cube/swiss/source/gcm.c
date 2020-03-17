@@ -468,7 +468,9 @@ int patch_gcm(file_handle *file, ExecutableFile *filesToPatch, int numToPatch) {
 				Patch_CheatsHook(buffer, sizeToRead, filesToPatch[i].type);
 			}
 
-            Patch_SavestateHook(buffer, sizeToRead, filesToPatch[i].type);
+//			if(swissSettings.enableSavestate) {
+				Patch_SavestateHook(buffer, sizeToRead, filesToPatch[i].type);
+//			}
 
             patched += Patch_FontEncode(buffer, sizeToRead);
 			

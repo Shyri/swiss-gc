@@ -1006,7 +1006,9 @@ unsigned int load_app(ExecutableFile *filesToPatch, int numToPatch)
 		Patch_CheatsHook(buffer, sizeToRead, type);
 	}
 
-	Patch_SavestateHook(buffer, sizeToRead, type);
+//	if(swissSettings.enableSavestate) {
+		Patch_SavestateHook(buffer, sizeToRead, type);
+//	}
 
 	DCFlushRange(buffer, sizeToRead);
 	ICInvalidateRange(buffer, sizeToRead);
@@ -1087,7 +1089,9 @@ unsigned int load_app(ExecutableFile *filesToPatch, int numToPatch)
 		kenobi_install_engine();
 	}
 
-	install_savestate();
+//	if(swissSettings.enableSavestate) {
+		install_savestate();
+//	}
 
 	print_gecko("libogc shutdown and boot game!\r\n");
 	if(devices[DEVICE_CUR] == &__device_sd_a || devices[DEVICE_CUR] == &__device_sd_b || devices[DEVICE_CUR] == &__device_sd_c) {
