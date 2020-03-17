@@ -12,12 +12,6 @@
 
 .globl _start
 
-gameid:
-.long	0,0
-cheatdata:
-.long	frozenvalue
-.space 39*4
-
 _start:
 	stwu	r1,-168(r1)		# stores sp
 	stw	r0,8(r1)		# stores r0
@@ -55,8 +49,6 @@ _start:
 	mflr	r29
 	lis r15, codelist@h
 	ori	r15, r15, codelist@l
-
-	ori	r7, 31, cheatdata@l	# set pointer for storing data (before the codelist)
 
 	lis	r6,0x8000		# default base address = 0x80000000 (code handler)
 
@@ -143,8 +135,6 @@ resumegame:
 	isync
 
         blr				# return back to game
-frozenvalue:	#frozen value, then LR
-.long        0,0
 codelist:
 .space 2*4
 .end
