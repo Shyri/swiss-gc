@@ -213,6 +213,7 @@ int PatchDetectLowMemUsage( void *dst, u32 Length, int dataType );
 void *Calc_ProperAddress(void *data, int dataType, u32 offsetFoundAt);
 void *Calc_Address(void *data, int dataType, u32 properAddress);
 int Patch_CheatsHook(u8 *data, u32 length, u32 type);
+int Patch_SavestateHook(u8 *data, u32 length, u32 type);
 int install_code(int final);
 
 
