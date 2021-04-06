@@ -394,7 +394,7 @@ s32 deviceHandler_FAT_setupFile(file_handle* file, file_handle* file2, int numTo
 		*(vu8*)VAR_SD_SHIFT = sdgecko_getAddressingType(slot) ? 9:0;
 	}
 	// Copy the actual freq
-	*(vu8*)VAR_EXI_FREQ = isSDCard ? sdgecko_getSpeed(slot):(swissSettings.exiSpeed ? EXI_SPEED32MHZ:EXI_SPEED16MHZ);
+	*(vu8*)VAR_EXI_FREQ = EXI_SPEED32MHZ;
 	// Device slot (0, 1 or 2)
 	*(vu8*)VAR_EXI_SLOT = slot;
 	// IDE-EXI only settings

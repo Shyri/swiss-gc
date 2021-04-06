@@ -243,7 +243,8 @@ build-bba:
 build-savestate:
 	@echo Building Savestate ...
 	@$(CC) -O1 $(OPTS) -c savestate/savestate.S
-	@$(LD) -o savestatepatch.elf -T savestate/savestate.ld -T base/common.ld savestate.o --gc-sections
+	@$(CC) -O1 $(OPTS) -c savestate/savestate_code.c
+	@$(LD) -o savestatepatch.elf -T savestate/savestate.ld -T base/common.ld savestate.o savestate_code.o --gc-sections
 	@rm -rf *.o
 	@$(OBJDUMP) -D savestatepatch.elf > $(DISASM)/savestatepatch.txt
 	@$(OBJCOPY) -O binary savestatepatch.elf savestatepatch.bin

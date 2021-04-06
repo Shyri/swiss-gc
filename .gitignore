@@ -1,6 +1,9 @@
 /dist
 /swiss_r*
 
+.idea/*
+cube/.idea/*
+
 cube/swiss/build/
 cube/swiss/dist/
 
